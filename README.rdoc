@@ -1,0 +1,14 @@
+= Moonshine_Geoip
+
+=== A plugin for Moonshine[http://github.com/railsmachine/moonshine]
+
+A plugin for installing and managing geoip.
+
+=== Instructions
+
+* <tt>script/plugin install git://github.com/ACCOUNT/moonshine_geoip.git</tt>
+* Configure settings if needed
+    configure(:geoip => {:foo => true})
+* Include the plugin and recipe(s) in your Moonshine manifest
+    plugin :geoip
+    recipe :geoip
