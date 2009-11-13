@@ -1,7 +1,7 @@
 <IfModule mod_geoip.c>
     GeoIPEnable On
     GeoIPOutput Env
-<% if configuration[:geoip][:user_id] && configuration[:geoip][:license_key] %>
+<% if options[:user_id] && options[:license_key] %>
     GeoIPDBFile /usr/share/GeoIP/GeoIP.dat Standard
 <% else %>
     GeoIPDBFile /usr/local/share/GeoIP/GeoIP.dat Standard

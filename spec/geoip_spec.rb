@@ -39,9 +39,6 @@ describe "A manifest with the Geoip plugin" do
 
     describe "and using the mod_geoip recipe" do
       before do
-        # FIXME: this shouldn't be needed and it breaks the it_should_behave_like
-        # cases that need specific configuration
-        @manifest.configure(:geoip => {})
         @manifest.mod_geoip
       end
 
