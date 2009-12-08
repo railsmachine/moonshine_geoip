@@ -24,8 +24,8 @@ describe "A manifest with the Geoip plugin" do
 
     it 'should create GeoIP.dat under /usr/local' do
       @new_db_exec = @manifest.execs['new-geoip-db']
-      @new_db_exec.command.should match(/\/usr\/local\/share/)
-      @new_db_exec.creates.should match(/\/usr\/local\/share/)
+      @new_db_exec.command.should match(%r{/usr/local/share})
+      @new_db_exec.creates.should match(%r{/usr/local/share})
     end
 
     it 'should not create /etc/GeoIP.conf' do
@@ -34,7 +34,7 @@ describe "A manifest with the Geoip plugin" do
 
     it 'should create cron job updating database in /usr/local' do
       cron_job = @manifest.crons['Monthly GeoIP database updates']
-      cron_job.command.should match(/\usr\/local\/share\/GeoIP/)
+      cron_job.command.should match(%r{/usr/local/share/GeoIP})
     end
 
     describe "and using the mod_geoip recipe" do
@@ -44,7 +44,7 @@ describe "A manifest with the Geoip plugin" do
 
       it 'should use /usr/local database in the module conf' do
         conf_file = @manifest.files['/etc/apache2/mods-available/geoip.conf']
-        conf_file.content.should match(/GeoIPDBFile \/usr\/local\/share/)
+        conf_file.content.should match(%r{GeoIPDBFile /usr/local/share})
       end
 
     end
@@ -83,7 +83,7 @@ describe "A manifest with the Geoip plugin" do
 
       it 'should use /usr/share database in the module conf' do
         conf_file = @manifest.files['/etc/apache2/mods-available/geoip.conf']
-        conf_file.content.should match(/GeoIPDBFile \/usr\/share/)
+        conf_file.content.should match(%r{GeoIPDBFile /usr/share})
       end
 
     end
