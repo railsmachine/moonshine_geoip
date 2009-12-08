@@ -15,7 +15,7 @@ describe "A manifest with the Geoip plugin" do
     end
 
     it 'should install the geoip-bin package' do
-      @manifest.packages.keys.should include 'geoip-bin'
+      @manifest.packages.keys.should include('geoip-bin')
     end
 
     it 'should use the GeoLite Country database' do
@@ -29,7 +29,7 @@ describe "A manifest with the Geoip plugin" do
     end
 
     it 'should not create /etc/GeoIP.conf' do
-      @manifest.files.keys.should_not include '/etc/GeoIP.conf'
+      @manifest.files.keys.should_not include('/etc/GeoIP.conf')
     end
 
     it 'should create cron job updating database in /usr/local' do
@@ -61,11 +61,11 @@ describe "A manifest with the Geoip plugin" do
     end
 
     it 'should install the geoip-bin package' do
-      @manifest.packages.keys.should include 'geoip-bin'
+      @manifest.packages.keys.should include('geoip-bin')
     end
 
     it 'should create /etc/GeoIP.conf' do
-      @manifest.files.keys.should include '/etc/GeoIP.conf'
+      @manifest.files.keys.should include('/etc/GeoIP.conf')
       @manifest.files['/etc/GeoIP.conf'].content.should match(/tiddlywinks/)
     end
 
