@@ -74,11 +74,11 @@ module Geoip
         ]
     end
 
-    # Updates are released on the first of every month
+    # Updates are released between the 1st and 3rd of every month
     cron 'Monthly GeoIP database updates',
       :user => 'root',
       :command => db_update_command,
-      :minute => 33, :hour => 3, :monthday => 2
+      :minute => 33, :hour => 3, :monthday => 3
 
     # Configure and enable the Apache mod_geoip module if opted for
     if options[:apache_module]
