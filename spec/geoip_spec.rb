@@ -37,9 +37,9 @@ describe "A manifest with the Geoip plugin" do
       cron_job.command.should match(%r{/usr/local/share/GeoIP})
     end
 
-    describe "and using the mod_geoip recipe" do
+    describe "and using the mod_geoip Apache module" do
       before do
-        @manifest.mod_geoip
+        @manifest.geoip(:apache_module => true)
       end
 
       it 'should use /usr/local database in the module conf' do
@@ -75,10 +75,12 @@ describe "A manifest with the Geoip plugin" do
       cron_job.command.should match(/geoipupdate/)
     end
 
-    describe "and using the mod_geoip recipe" do
+    describe "and using the mod_geoip Apache module" do
       before do
-        @manifest.configure(:geoip => {:user_id => 'Jimbob', :license_key => 'tiddlywinks'})
-        @manifest.mod_geoip
+        @manifest.geoip(
+          :apache_module => true,
+          :user_id => 'Bob', :license_key => 'tiddlywinks'
+        )
       end
 
       it 'should use /usr/share database in the module conf' do
@@ -95,20 +97,39 @@ describe "A manifest with the Geoip plugin" do
       @manifest.geoip(:geo_database_url => 'http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz')
     end
 
-    it 'should use the custom URL for first update' do
-      @manifest.execs['new-geoip-db'].command.should match(/GeoLiteCity/)
+    it 'should fetch the custom URL for first update' do
+      @manifest.execs['new-geoip-db'].command.should match(%r{database/GeoLiteCity})
     end
 
-    it 'should use the custom URL for cron updates' do
-      @manifest.crons['Monthly GeoIP database updates'].command.should match(/GeoLiteCity/)
+    it 'should fetch the custom URL for cron updates' do
+      @manifest.crons['Monthly GeoIP database updates'].command.should match(%r{database/GeoLiteCity})
+    end
+
+    it 'should operate on correct DB file basename' do
+      @manifest.crons['Monthly GeoIP database updates'].command.should match(/gunzip GeoLiteCity/)
+      @manifest.crons['Monthly GeoIP database updates'].command.should match(/mv \-f GeoLiteCity/)
+    end
+
+    describe "and using the mod_geoip Apache module" do
+      before do
+        @manifest.geoip(
+          :apache_module => true,
+          :geo_database_url => 'http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz'
+        )
+      end
+
+      it 'should use the correct DB file in the module conf' do
+        conf_file = @manifest.files['/etc/apache2/mods-available/geoip.conf']
+        conf_file.content.should match(%r{GeoLiteCity.dat})
+      end
+
     end
 
   end
 
   describe "with only the user_id option set" do
     before do
-      @manifest.configure(:geoip => {:user_id => 'Joebob'})
-      @manifest.geoip()
+      @manifest.geoip(:user_id => 'Joebob')
     end
 
     it_should_behave_like "default behavior"

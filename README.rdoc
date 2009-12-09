@@ -15,16 +15,18 @@ regularly updating the GeoIP database.
 * <tt>script/plugin install git://github.com/railsmachine/moonshine_geoip.git</tt>
 * Include the plugin and recipe(s) in your Moonshine manifest
     plugin :geoip
-    recipe :geoip, :mod_geoip
+    recipe :geoip
 
 === Additional Configuration
 
-The plugin defaults to installing and updating the 'GeoLite Country' database,
-but if you wish to use another available database or if you're a GeoIP licensee,
-you can set some configuration options via the +configure+ method or
-<tt>moonshine.yml</tt>:
+The plugin defaults to installing the GeoIP C API and the 'GeoLite Country'
+database with a cron job to update it. Configuration options are available to
+also enable the +mod_geoip+ Apache module, use another available database, and
+specify license details if you're a GeoIP licensee. Set these options via the
++configure+ method or <tt>moonshine.yml</tt> as usual:
 
     :geoip:
+      :apache_module: true
       :geo_database_url: http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
       :user_id: Joebob
       :license_key: <your key>
@@ -38,7 +40,7 @@ you can set some configuration options via the +configure+ method or
 Refer to MaxMind for {more on using your licensed products}[http://www.maxmind.com/app/license_key].
 As with all Moonshine plugins, you can also override the default templates
 included with this plugin to customize configuration. So to set things for the
-Apache +mod_geoip+ module exactly how you want them:
+Apache module exactly how you want them:
 
     $ cp vendor/plugins/moonshine_geoip/templates/geoip.conf app/manifests/templates
     (hack)

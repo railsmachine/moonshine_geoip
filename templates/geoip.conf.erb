@@ -2,9 +2,9 @@
     GeoIPEnable On
     GeoIPOutput Env
 <% if options[:user_id] && options[:license_key] %>
-    GeoIPDBFile /usr/share/GeoIP/GeoIP.dat Standard
+    GeoIPDBFile /usr/share/GeoIP/<%= db_basename %>.dat Standard
 <% else %>
-    GeoIPDBFile /usr/local/share/GeoIP/GeoIP.dat Standard
+    GeoIPDBFile /usr/local/share/GeoIP/<%= db_basename %>.dat Standard
 <% end %>
 </IfModule>
 

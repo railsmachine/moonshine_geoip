@@ -33,6 +33,7 @@ module Geoip
     package 'geoip-bin', :ensure => :installed, :notify => exec('new-geoip-db')
 
     db_update_command = nil
+    db_basename = options[:geo_database_url] =~ /(GeoLiteCity)/ ? $1 : 'GeoIP'
 
     # Prefer to use the built-in +geoipupdate+ tool if possible, configuring
     # GeoIP for a licensed account if credentials are given.
@@ -57,8 +58,8 @@ module Geoip
         [
           "cd /tmp",
           "/usr/bin/wget #{options[:geo_database_url]}",
-          "/bin/gunzip GeoIP.dat.gz",
-          "/bin/mv -f GeoIP.dat /usr/local/share/GeoIP"
+          "/bin/gunzip #{db_basename}.dat.gz",
+          "/bin/mv -f #{db_basename}.dat /usr/local/share/GeoIP"
         ].join(' && ')
 
       # First-time update
@@ -66,7 +67,7 @@ module Geoip
       # +:cwd+ parameter so that it applies for cron job usage as well
       exec 'new-geoip-db',
         :command => db_update_command,
-        :creates => '/usr/local/share/GeoIP/GeoIP.dat',
+        :creates => "/usr/local/share/GeoIP/#{db_basename}.dat",
         :require => [
           package('wget'),
           file('/usr/local/share/GeoIP')
@@ -78,18 +79,18 @@ module Geoip
       :user => 'root',
       :command => db_update_command,
       :minute => 33, :hour => 3, :monthday => 2
-  end
 
-  # Configure and enable the Apache mod_geoip module
-  def mod_geoip(options={})
-    package 'libapache2-mod-geoip', :ensure => :installed
-    a2enmod 'geoip'
-    file '/etc/apache2/mods-available/geoip.conf',
-      :ensure => :present,
-      :mode => '644',
-      :content => template(File.join(GEOIP_TEMPLATES_DIR, 'geoip.conf.erb'), binding),
-      :before => exec('a2enmod geoip'),
-      :notify => service('apache2')
+    # Configure and enable the Apache mod_geoip module if opted for
+    if options[:apache_module]
+      package 'libapache2-mod-geoip', :ensure => :installed
+      a2enmod 'geoip'
+      file '/etc/apache2/mods-available/geoip.conf',
+        :ensure => :present,
+        :mode => '644',
+        :content => template(File.join(GEOIP_TEMPLATES_DIR, 'geoip.conf.erb'), binding),
+        :before => exec('a2enmod geoip'),
+        :notify => service('apache2')
+    end
   end
 end
 
