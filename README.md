@@ -1,23 +1,23 @@
-= Duty-free, a Moonshine plugin for GeoIP
+# Duty-free, a Moonshine plugin for GeoIP
 
-Moonshine[http://github.com/railsmachine/moonshine] is a potent blend of Rails
+[Moonshine](http://github.com/railsmachine/moonshine) is a potent blend of Rails
 deployment and configuration management done right -- now get a taste of the
 spirits of the world by bringing a little GeoIP into your distillery.
 
-This is a plugin for installing and managing the {mod_geoip Apache module}[http://www.maxmind.com/app/mod_geoip]
+This is a plugin for installing and managing the [mod_geoip Apache module](http://www.maxmind.com/app/mod_geoip)
 and the GeoIP C library it depends on. With GeoIP, Apache can handle requests
 with awareness of the client's locale, based on IP address. In addition to
 installing and enabling the libraries and module, it configures a cron job for
 regularly updating the GeoIP database.
 
-=== Instructions
+### Instructions
 
 * <tt>script/plugin install git://github.com/railsmachine/moonshine_geoip.git</tt>
 * Include the plugin and recipe(s) in your Moonshine manifest
     plugin :geoip
     recipe :geoip
 
-=== Additional Configuration
+### Additional Configuration
 
 The plugin defaults to installing the GeoIP C API and the 'GeoLite Country'
 database with a cron job to update it. Configuration options are available to
@@ -37,7 +37,7 @@ specify license details if you're a GeoIP licensee. Set these options via the
     # In your manifests:
     configure(:geoip => {:user_id => 'Joebob'})  # etc.
 
-Refer to MaxMind for {more on using your licensed products}[http://www.maxmind.com/app/license_key].
+Refer to MaxMind for [more on using your licensed products](http://www.maxmind.com/app/license_key).
 As with all Moonshine plugins, you can also override the default templates
 included with this plugin to customize configuration. So to set things for the
 Apache module exactly how you want them:
@@ -45,8 +45,6 @@ Apache module exactly how you want them:
     $ cp vendor/plugins/moonshine_geoip/templates/geoip.conf app/manifests/templates
     (hack)
 
----
-
-Duty-free and Moonshine are brought you by {Rails Machine}[http://railsmachine.com/] --
-please travel responsibly, and beware of pirates tryin' to steal yer rum.
+***
+Unless otherwise specified, all content copyright &copy; 2014, [Rails Machine, LLC](http://railsmachine.com)
 
